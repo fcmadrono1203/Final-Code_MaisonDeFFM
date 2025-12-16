@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Profile – Maison De FFM</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="profile.css" />
+</head>
+<body>
+
+  <!-- NAVIGATION BAR -->
+  <div class="navbar">
+    <div class="nav-left">
+      <img src="assets/logo/FFM.png" alt="Maison De FFM Logo">
+      <h2 class="nav-title">MAISON DE FFM</h2>
+    </div>
+
+    <div class="nav-center">
+      <a href="home.html">HOME</a>
+      <a href="about.html">ABOUT US</a>
+      <a href="services.html">SERVICES</a>
+      <a href="promos.html">PROMOS</a>
+      <a href="contact.html">CONTACT US</a>
+    </div>
+
+    <a href="booking.html" class="book-btn">BOOK NOW!</a>
+  </div>
+
+
+  
+  <!-- USER PROFILE PAGE WRAPPER -->
+  <div class="profile-page">
+
+    <!-- Header -->
+    <header class="profile-header">
+      <h1>My Profile</h1>
+      <p>Manage your beauty &amp; wellness bookings at home.</p>
+    </header>
+
+<section class="profile-section user-info">
+  <h2>User Information</h2>
+
+  <div class="field">
+    <label>Full Name</label>
+    <span id="profile-name">Guest</span>
+  </div>
+
+  <div class="field">
+    <label>Birthdate</label>
+    <span id="profile-birthday">N/A</span>
+  </div>
+
+  <div class="field">
+    <label>Email</label>
+    <span id="profile-email">N/A</span>
+  </div>
+
+  <div class="field">
+    <label>Phone Number</label>
+    <span id="profile-phone">N/A</span>
+  </div>
+
+  <div class="field">
+    <label>Address</label>
+    <span id="profile-address">N/A</span>
+  </div>
+</section>
+
+
+
+    <!-- Appointment Tracker -->
+   <section class="profile-section appointments" id="appointments">
+  <h2>Appointment Tracker</h2>
+
+  <ul class="appointment-list" id="appointment-list">
+    <!-- Filled by JS -->
+  </ul>
+
+</section>
+
+
+
+    <!-- Transaction History -->
+<section class="profile-section transactions">
+  <h2>Transaction History</h2>
+
+  <ul class="transaction-list" id="transaction-list">
+    <!-- Filled by JS -->
+  </ul>
+</section>
+
+
+
+
+    <!-- Logout Button at Bottom -->
+    <footer class="profile-footer">
+      <!-- If you want same style as top-right, change to class="logout-btn" -->
+<a href="login.html" class="btn-logout">
+  LOG OUT
+</a>
+      </button>
+    </footer>
+
+  </div>
+
+  <script>
+  // -------- USER INFO FROM SIGNUP --------
+  const storedUser = localStorage.getItem('mdffmUser');
+  if (storedUser) {
+    const user = JSON.parse(storedUser);
+
+    if (user.name) {
+      document.getElementById('profile-name').textContent = user.name;
+    }
+    if (user.email) {
+      document.getElementById('profile-email').textContent = user.email;
+    }
+    if (user.phone) {
+      document.getElementById('profile-phone').textContent = user.phone;
+    }
+    if (user.address) {
+      document.getElementById('profile-address').textContent = user.address;
+    }
+    if (user.birthday) {
+      const d = new Date(user.birthday);
+      const formatted = d.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: '2-digit'
+      });
+      document.getElementById('profile-birthday').textContent = formatted;
+    }
+  }
+
+
+
+  // -------- BOOKING DATA FROM booking.html --------
+  const storedBooking = localStorage.getItem('bookingData');
+
+  if (storedBooking) {
+    const bookings = JSON.parse(storedBooking);  // should be an array
+
+    const apptList = document.getElementById('appointment-list');
+    const txList = document.getElementById('transaction-list');
+
+    apptList.innerHTML = '';
+    txList.innerHTML = '';
+
+    bookings.forEach((booking) => {
+      const servicesText = booking.services && booking.services.length
+        ? booking.services.join(', ')
+        : 'No services';
+
+      // Appointment Tracker item
+      apptList.innerHTML += `
+        <li class="appointment-item">
+          <div class="appointment-main">
+            <h3>${servicesText}</h3>
+            <p>Beautician: ${booking.beautician || 'TBA'}</p>
+          </div>
+          <div class="appointment-meta">
+            <p>${booking.date || ''} • ${booking.time || ''}</p>
+            <span class="status status-upcoming">${booking.status || 'Upcoming'}</span>
+          </div>
+        </li>
+      `;
+
+      // Transaction History item
+      txList.innerHTML += `
+        <li class="transaction-item">
+          <div class="transaction-main">
+            <h3>${servicesText}</h3>
+            <p>${booking.date || ''} • Home Service</p>
+          </div>
+          <div class="transaction-meta">
+            <p class="amount">₱${(booking.totalPrice || 0).toLocaleString()}</p>
+            <span class="status status-paid">${booking.paymentStatus || 'Pending'}</span>
+          </div>
+        </li>
+      `;
+    });
+  }
+</script>
+
+</body>
+</html>

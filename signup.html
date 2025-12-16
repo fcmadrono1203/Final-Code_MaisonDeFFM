@@ -23,25 +23,52 @@
                 <h2>Create Account</h2>
                 <p class="subtitle">Your details</p>
 
-                <form action="home.html" method="POST">
-                     <input type="text" placeholder="Full Name" required>
-                      <input type="email" placeholder="Email" required>
-                       <input type="tel" placeholder="Phone" required>
-                        <input type="text" placeholder="Address" required>
-                        
-                        <div class="select-wrapper">
-                            <select name="gender" required>
-                                 <option value="" disabled selected>Gender</option>
-                                 <option value="female">Female</option>
-                                 <option value="male">Male</option>
-                                </select>
-                            </div>
+                <form id="signup-form" action="home.html" method="POST">
+                    <input type="text" name="fullName" placeholder="Full Name" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="tel" name="phone" placeholder="Phone" required>
+                    <input type="text" name="address" placeholder="Address" required>
+                    <div class="select-wrapper">
+                        <select name="gender" required>
+                            <option value="" disabled selected>Gender</option>
+                            <option value="female">Female</option>
+                            <option value="male">Male</option>
+                        </select>
+                    </div>
+                    
+                    <input type="date" name="birthday" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+                    
+                    <button type="button" class="login-submit" onclick="location.href='home.html'">SIGN UP</button>
+                </form>
+                
+                <script>
+                const form = document.getElementById('signup-form');
+                
+                form.addEventListener('submit', function (e) {
+                    // simple password match check (optional)
+                    const pwd = form.password.value;
+                    const confirm = form.confirmPassword.value;
+                    if (pwd !== confirm) {
+                        e.preventDefault();
+                        alert('Passwords do not match.');
+                        return;
+                    }
 
-                            <input type="date" name="birthday" required>
-                            <input type="password" placeholder="Password" required>
-                            <input type="password" placeholder="Confirm Password" required>
-                            <button type="submit" class="login-submit">SIGN UP</button>
-                        </form>
+    // save user data to localStorage
+    const userData = {
+      name: form.fullName.value,
+      email: form.email.value,
+      phone: form.phone.value,
+      birthday: form.birthday.value,
+      address: form.address.value
+    };
+    localStorage.setItem('mdffmUser', JSON.stringify(userData));
+    // allow normal submit to home.html
+  });
+</script>
+
 
                 
                 <div class="signup">
